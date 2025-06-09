@@ -6,7 +6,6 @@ The original repository can be found [here](https://github.com/HiDream-ai/HiDrea
 
 > `HiDream-I1` is a new open-source image generative foundation model with 17B parameters that achieves state-of-the-art image generation quality within seconds.
 
-![HiDream-I1 Demo](assets/demo.jpg)
 
 ![image](https://github.com/user-attachments/assets/d4715fb9-efe1-40c3-bd4e-dfd626492eea)
 
@@ -28,34 +27,8 @@ We offer both the full version and distilled models. The parameter size are the 
 
 ## Quick Start
 
-Simply run:
-
-```
-pip install hdi1 --no-build-isolation
-```
-
-> [!NOTE]
-> It's recommended that you start a new python environment for this package to avoid dependency conflicts.  
-> To do that, you can use `conda create -n hdi1 python=3.12` and then `conda activate hdi1`.  
-> Or you can use `python3 -m venv venv` and then `source venv/bin/activate` on Linux or `venv\Scripts\activate` on Windows.
-
-### Command Line Interface
-
-Then you can run the module to generate images:
-
-``` python 
-python -m hdi1 "A cat holding a sign that says 'hello world'"
-
-# or you can specify the model
-python -m hdi1 "A cat holding a sign that says 'hello world'" -m fast
-```
-
-> [!NOTE]
-> The inference script will try to automatically download `meta-llama/Llama-3.1-8B-Instruct` model files. You need to [agree to the license of the Llama model](https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct) on your HuggingFace account and login using `huggingface-cli login` in order to use the automatic downloader.
 
 ### Web Dashboard
-
-We also provide a web dashboard for interactive image generation. You can start it by running:
 
 ``` python
 python -m hdi1.web
