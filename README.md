@@ -1,38 +1,27 @@
-# HiDream-I1 4Bit Quantized Model
+# 🎨 HiDream-I1-nf4 SUP3R Edition
 
-This repository is a fork of `HiDream-I1` quantized to 4 bits, allowing the full model to run in less than 16GB of VRAM. 
+A stylish, performance-tuned Gradio UI built on top of the [HiDream-I1](https://github.com/HiDream-ai/HiDream-I1) pipeline — now enhanced with `nf4` quantization, dynamic schedulers, and LLaMA 3.1 integration for supercharged image generation.
 
-The original repository can be found [here](https://github.com/HiDream-ai/HiDream-I1).
+> ✅ Powered by: [HiDream-ai/HiDream-I1](https://github.com/HiDream-ai/HiDream-I1)
+---
 
-> `HiDream-I1` is a new open-source image generative foundation model with 17B parameters that achieves state-of-the-art image generation quality within seconds.
+## 🛠️ Installation
 
+Install via [Pinokio](https://www.pinokio.co/item.html?uri=https%3A%2F%2Fgithub.com%2FSUP3RMASS1VE%2FHiDream-I1&parent_frame=&theme=null).
 
-![image](https://github.com/user-attachments/assets/d4715fb9-efe1-40c3-bd4e-dfd626492eea)
+---
 
-## Models
+## ✨ Highlights
 
-We offer both the full version and distilled models. The parameter size are the same, so they require the same amount of GPU memory to run. However, the distilled models are faster because of reduced number of inference steps.
-
-| Name            | Min VRAM | Steps | HuggingFace                                                                                                                  |
-|-----------------|----------|-------|------------------------------------------------------------------------------------------------------------------------------|
-| HiDream-I1-Full | 16 GB    | 50    | 🤗 [Original](https://huggingface.co/HiDream-ai/HiDream-I1-Full) / [NF4](https://huggingface.co/azaneko/HiDream-I1-Full-nf4) |
-| HiDream-I1-Dev  | 16 GB    | 28    | 🤗 [Original](https://huggingface.co/HiDream-ai/HiDream-I1-Dev) / [NF4](https://huggingface.co/azaneko/HiDream-I1-Dev-nf4)   |
-| HiDream-I1-Fast | 16 GB    | 16    | 🤗 [Original](https://huggingface.co/HiDream-ai/HiDream-I1-Fast) / [NF4](https://huggingface.co/azaneko/HiDream-I1-Fast-nf4) |
-
-## Hardware Requirements
-
-- GPU Architecture: NVIDIA `>= Ampere` (e.g. A100, H100, A40, RTX 3090, RTX 4090)
-- GPU RAM: `>= 16 GB`
-- CPU RAM: `>= 16 GB`
-
-## Quick Start
+- 🔧 **Three model profiles**: `fast`, `full`, `dev` — optimized for speed, quality, and experimentation.
+- 🧠 **nf4 quantization** using `bitsandbytes` and `unsloth` for efficient LLaMA-3 inference.
+- 🌈 **Custom Gradio UI** with modern CSS and animated effects.
+- 📐 Multiple resolutions and output formats (PNG, JPEG, WEBP).
+- 🧹 Temp file cleanup + VRAM logging for smoother GPU experience.
+- 💾 One-click image download + metadata (seed, path, etc).
 
 
-### Web Dashboard
-
-``` python
-python -m hdi1.web
-```
+---
 
 ![Screenshot 2025-04-08 200120](https://github.com/user-attachments/assets/0c464033-5619-489d-b9de-fef5a7119cfc)
 
