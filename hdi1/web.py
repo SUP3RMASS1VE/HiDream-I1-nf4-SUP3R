@@ -737,8 +737,7 @@ RESOLUTION_OPTIONS = [
     "880 × 1168 (Portrait)",
     "1168 × 880 (Landscape)",
     "1248 × 832 (Landscape)",
-    "832 × 1248 (Portrait)",
-    "Custom"
+    "832 × 1248 (Portrait)"
 ]
 
 # Scheduler options (flow-matching only)
@@ -751,12 +750,8 @@ SCHEDULER_OPTIONS = [
 IMAGE_FORMAT_OPTIONS = ["PNG", "JPEG", "WEBP"]
 
 # Parse resolution string to get height and width
-def parse_resolution(resolution_str, custom_width=None, custom_height=None):
+def parse_resolution(resolution_str):
     try:
-        if resolution_str == "Custom":
-            if custom_width is None or custom_height is None:
-                raise ValueError("Custom width and height must be provided")
-            return (int(custom_width), int(custom_height))
         return tuple(map(int, resolution_str.split("(")[0].strip().split(" × ")))
     except (ValueError, IndexError) as e:
         raise ValueError("Invalid resolution format") from e
@@ -820,7 +815,7 @@ def clean_all_temp_files():
         logger.error(error_message)
         return error_message
 
-def gen_img_helper(model, prompt, res, seed, scheduler, guidance_scale, num_inference_steps, shift, image_format, custom_width=None, custom_height=None):
+def gen_img_helper(model, prompt, res, seed, scheduler, guidance_scale, num_inference_steps, shift, image_format):
     global pipe, current_model
     status_message = "Starting image generation..."
 
@@ -843,14 +838,7 @@ def gen_img_helper(model, prompt, res, seed, scheduler, guidance_scale, num_infe
         if shift < 1 or shift > 10:
             raise ValueError("Shift must be between 1 and 10")
         
-        # Validate custom resolution if needed
-        if res == "Custom":
-            if not custom_width or not custom_height:
-                raise ValueError("Custom width and height must be provided")
-            if int(custom_width) < 64 or int(custom_width) > 2048:
-                raise ValueError("Custom width must be between 64 and 2048 pixels")
-            if int(custom_height) < 64 or int(custom_height) > 2048:
-                raise ValueError("Custom height must be between 64 and 2048 pixels")
+
 
         # 1. Check if the model matches loaded model, load the model if not
         if model != current_model:
@@ -884,7 +872,7 @@ def gen_img_helper(model, prompt, res, seed, scheduler, guidance_scale, num_infe
         # 3. Generate image
         status_message = "Generating image..."
         logger.info(status_message)
-        res = parse_resolution(res, custom_width, custom_height)
+        res = parse_resolution(res)
         image, seed = generate_image(pipe, model, prompt, res, seed, guidance_scale, num_inference_steps)
         
         # 4. Save image locally with selected format
@@ -1009,44 +997,7 @@ if __name__ == "__main__":
                     info="Choose aspect ratio and size for your image"
                 )
                 
-                with gr.Row(visible=False) as custom_resolution_row:
-                    custom_width = gr.Number(
-                        label="🔢 Custom Width",
-                        value=1024,
-                        minimum=64,
-                        maximum=2048,
-                        step=8,
-                        info="Width in pixels (64-2048, multiple of 8 recommended)"
-                    )
-                    custom_height = gr.Number(
-                        label="🔢 Custom Height", 
-                        value=1024,
-                        minimum=64,
-                        maximum=2048,
-                        step=8,
-                        info="Height in pixels (64-2048, multiple of 8 recommended)"
-                    )
-                
-                with gr.Accordion("ℹ️ Custom Resolution Info", open=True, visible=False) as custom_info_accordion:
-                    gr.Markdown("""
-                    ### 🔧 How HiDream Handles Custom Resolutions
-                    
-                    **Dynamic Scaling & Optimization:**
-                    - The model automatically applies **dynamic scaling** based on your custom dimensions
-                    - Images are processed through a **latent space optimization** that maintains quality across different aspect ratios
-                    - The **shift parameter** is dynamically adjusted to ensure optimal results for your specific resolution
-                    
-                    **Best Practices:**
-                    - Use dimensions that are **multiples of 8** for optimal memory efficiency
-                    - Keep the total pixel count reasonable (under 2M pixels) for faster generation
-                    - **Square or near-square** ratios (1:1 to 4:3) typically produce the most stable results
-                    - Very extreme aspect ratios may require **higher inference steps** (35-50) for best quality
-                    
-                    **Technical Details:**
-                    - The flow-matching scheduler adapts timestep spacing based on image dimensions
-                    - Larger resolutions automatically receive enhanced attention mechanisms
-                    - The model uses **fractional pixel positioning** to handle non-standard dimensions seamlessly
-                    """)
+
                 
                 
                 image_format = gr.Radio(
@@ -1128,24 +1079,11 @@ if __name__ == "__main__":
                     file_types=[".png", ".jpeg", ".webp"]
                 )
         
-        # Function to toggle custom resolution visibility
-        def toggle_custom_resolution(resolution_choice):
-            is_custom = resolution_choice == "Custom"
-            return (
-                gr.Row(visible=is_custom),
-                gr.Accordion(visible=is_custom)
-            )
-        
         # Event handlers
-        resolution.change(
-            fn=toggle_custom_resolution,
-            inputs=[resolution],
-            outputs=[custom_resolution_row, custom_info_accordion]
-        )
         
         generate_btn.click(
             fn=gen_img_helper,
-            inputs=[model_type, prompt, resolution, seed, scheduler, guidance_scale, num_inference_steps, shift, image_format, custom_width, custom_height],
+            inputs=[model_type, prompt, resolution, seed, scheduler, guidance_scale, num_inference_steps, shift, image_format],
             outputs=[output_image, seed_used, save_path, download_file, status_message]
         )
         cleanup_btn.click(
