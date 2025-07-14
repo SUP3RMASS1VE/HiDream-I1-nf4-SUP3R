@@ -6,7 +6,7 @@ bitsandbytes>=0.45.5
 datasets>=3.5.0  
 device-smi>=0.4.1   
 einops>=0.7.0  
-gradio>=5.24.0  
+gradio==5.35.0  
 hf-transfer>=0.1.9  
 logbar>=0.0.4  
 optimum>=1.24.0  
